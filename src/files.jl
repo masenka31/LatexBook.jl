@@ -80,7 +80,7 @@ function write_chapters(book::BookData, nickname::String, scenes_df::DataFrame)
 
     """
 
-    project_path = "latex/project_$(nickname)"
+    project_path = joinpath(projects_path, "project_$nickname")
     chapter_files = String[]
 
     for (i, chapter) in enumerate(groupby(scenes_df, :chapter_number))
@@ -102,7 +102,7 @@ function write_chapters(book::BookData, nickname::String, scenes_df::DataFrame)
         end
     end
     append!(book.chapter_files, chapter_files)
-    render_main(book, "latex/project_$(nickname)")
+    render_main(book, project_path)
 end
 
 function export_book(nickname::String)

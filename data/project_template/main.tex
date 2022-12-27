@@ -1,0 +1,34 @@
+\documentclass[11pt,openany]{book}      % paper size is in preamble.sty
+
+%\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[czech]{babel}
+
+%%%%%%%%%% BOOK INFORMATION %%%%%%%%%%
+\newcommand{\authorname}{author}
+\newcommand{\booktitle}{title}
+% \newcommand{\subtitle}{missing}
+% \newcommand{\publisher}{missing}
+\newcommand{\editionyear}{2022}
+% \newcommand{\isbn}{missing}
+
+\title{\booktitle}
+\author{\authorname}
+
+\usepackage{misc/options}
+
+\begin{document}
+\frontmatter
+\input{frontmatter/titlepage}
+\input{frontmatter/copyrightpage}
+%\input{frontmatter/preface}
+%\input{frontmatter/tocpage}
+
+\mainmatter
+\pagestyle{fancy}
+
+%%%%%%%%%% CHAPTER INPUT %%%%%%%%%%
+\input{Chapter 1}
+
+
+\end{document}

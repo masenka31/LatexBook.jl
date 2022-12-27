@@ -36,7 +36,7 @@ function init_project_interactive()
     prepare_metadata_and_save(;nickname=nickname, author=author, title=title, subtitle=subtitle, publisher=publisher, isbn=isbn)
 end
 
-function init_project(;interactive=false, kwargs...)
+function init_project(;interactive=true, kwargs...)
     if interactive
         init_project_interactive()
     else
