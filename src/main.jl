@@ -78,6 +78,11 @@ function bookmetadata(book::BookData)
     ]
 end
 
+function load_metadata(nickname::String)
+    d = BSON.load("data/metadata/$nickname.bson")
+    return d[:metadata]
+end
+
 function metadata_commands(book::BookData)
     commands = [
         "\\newcommand{\\authorname}{$(book.author)}",
@@ -111,6 +116,8 @@ function render_main(book, filepath::String="latex/project")
     \\author{\\authorname}
 
     \\usepackage{misc/options}
+
+    \\DeclareUnicodeCharacter{202F}{\\,}
 
     \\begin{document}
     \\frontmatter

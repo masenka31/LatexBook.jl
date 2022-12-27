@@ -1,16 +1,16 @@
 using DataFrames
 
-struct Scene
-    scene_number::Int
-    scene_separator::String
-    content
-end
+# struct Scene
+#     scene_number::Int
+#     scene_separator::String
+#     content
+# end
 
-struct Chapter
-    chapter_name::String
-    chapter_number::Int
-    content
-end
+# struct Chapter
+#     chapter_name::String
+#     chapter_number::Int
+#     content
+# end
 
 boldface(s::String) = replace(s, r"\*\*(.*)\*\*" => s"\\textbf{\1}")
 italics(s::String) = replace(s, r"([^*]{0,1})\*([^*]+)\*([^*])" => s"\1\\textit{\2}\3")

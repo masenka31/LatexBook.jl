@@ -56,6 +56,7 @@ function get_scenes(book::BookData, srcfolder::String=obsidian_path)
     title = book.title
     files = get_markdown_files(srcfolder)
     scenes = filter_frontmatter(files, title)
+    @info "Total number of scenes loaded: $(length(scenes))."
     return scenes
 end
 
@@ -65,28 +66,52 @@ function process_scenes_text_to_dataframe(scenes)
     return df
 end
 
-function write_chapters(book::BookData, nickname::String, scenes_df::DataFrame, separator::String="***")
+function write_chapters(book::BookData, nickname::String, scenes_df::DataFrame)
+
+    separator = """
+
+    \\vspace{1cm}
+
+    \\begin{center}
+    ***
+    \\end{center}
+
+    \\vspace{1cm}
+
+    """
+
     project_path = "latex/project_$(nickname)"
     chapter_files = String[]
 
-    for (i, chapter) in enumerate(groupby(df, :chapter_number))
+    for (i, chapter) in enumerate(groupby(scenes_df, :chapter_number))
         scenes = chapter.scene_content
         if length(scenes) == 1
             write_chapter_file(
                 joinpath(project_path, "chapters", "chapter_$i"),
-                czech_speech(scenes[1])
+                czech_speech("\\chapter{}\n\n" * scenes[1])
             )
-            push!(chapter_files, "chapter_$i")
+            push!(chapter_files, "chapters/chapter_$i")
         else
-            a = chapter.scene_content[1:end-1] .* ("\n\n\n" * separator * "\n\n\n")
-            b = prod(a) * chapter.scene_content[end]
+            a = chapter.scene_content[1:end-1] .* separator
+            b = "\\chapter{}\n\n" * prod(a) * chapter.scene_content[end]
             write_chapter_file(
                 joinpath(project_path, "chapters", "chapter_$i"),
                 czech_speech(b)
             )
-            push!(chapter_files, "chapter_$i")
+            push!(chapter_files, "chapters/chapter_$i")
         end
     end
     append!(book.chapter_files, chapter_files)
-    render_main(book)
+    render_main(book, "latex/project_$(nickname)")
+end
+
+function export_book(nickname::String)
+    m = load_metadata(nickname)
+    @info "Export for book $(m.title) started."
+    book = BookData(; m...)
+    scenes = get_scenes(book)
+    df = process_scenes_text_to_dataframe(scenes)
+
+    write_chapters(book, nickname, df)
+    @info "Export finished."
 end

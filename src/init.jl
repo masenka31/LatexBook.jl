@@ -7,7 +7,7 @@ function prepare_metadata_and_save(;nickname, author, title, subtitle=nothing, p
         publisher=publisher,
         isbn=isbn
     )
-    safesave(datadir("metadata_$(nickname).bson"), Dict(:metadata => metadata))
+    safesave(datadir("metadata/$(nickname).bson"), Dict(:metadata => metadata))
     @info "Metadata saved with nickname `$nickname`."
 
     # creates the latex directory in your book based on the initial data
