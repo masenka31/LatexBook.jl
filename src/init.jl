@@ -11,12 +11,12 @@ function prepare_metadata_and_save(;nickname, author, title, subtitle=nothing, p
     @info "Metadata saved with nickname `$nickname`."
 
     # creates the latex directory in your book based on the initial data
-    cp(projectdir("latex/data"), projectdir("latex/project_$nickname"))
-    @info "Project folder generated at `/latex/project_$nickname`."
+    cp(datadir("project_template"), joinpath(projects_path, "project_$nickname"))
+    @info "Project folder generated at `$(joinpath(projects_path, "project_$nickname"))`."
 
     # generates the main.tex file based on the metadata provided
     book = BookData(;metadata...)
-    render_main(book, "latex/project_$nickname")
+    render_main(book, joinpath(projects_path, "project_$nickname"))
     @info "File `main.tex` generated."
 end
 

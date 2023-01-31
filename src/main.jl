@@ -79,7 +79,7 @@ function bookmetadata(book::BookData)
 end
 
 function load_metadata(nickname::String)
-    d = BSON.load("data/metadata/$nickname.bson")
+    d = BSON.load(datadir("metadata/$nickname.bson"))
     return d[:metadata]
 end
 

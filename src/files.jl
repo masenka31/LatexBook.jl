@@ -70,13 +70,9 @@ function write_chapters(book::BookData, nickname::String, scenes_df::DataFrame)
 
     separator = """
 
-    \\vspace{1cm}
-
     \\begin{center}
     ***
     \\end{center}
-
-    \\vspace{1cm}
 
     """
 
@@ -101,6 +97,7 @@ function write_chapters(book::BookData, nickname::String, scenes_df::DataFrame)
             push!(chapter_files, "chapters/chapter_$i")
         end
     end
+    @info "Number of chapters: $(length(chapter_files))."
     append!(book.chapter_files, chapter_files)
     render_main(book, project_path)
 end
