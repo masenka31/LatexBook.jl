@@ -34,8 +34,9 @@ function parse_file(lines)
         elseif occursin("scene_number", line)
             scene_number = match(r"scene_number: (.+)", line).captures[1]
             if scene_number == "undefined"
-                push!(dict, :scene_number => 999)    
+                push!(dict, :scene_number => 999)
             else
+                scene_number = strip(scene_number, '\"')
                 push!(dict, :scene_number => parse(Int, scene_number))
             end
         elseif occursin("chapter_name", line)
@@ -46,6 +47,7 @@ function parse_file(lines)
             if chapter_number == "undefined"
                 push!(dict, :chapter_number => 999)
             else    
+                chapter_number = strip(chapter_number, '\"')
                 push!(dict, :chapter_number => parse(Int, chapter_number))
             end
         end

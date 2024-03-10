@@ -3,8 +3,17 @@ Here we have functions to read the Obsidian folders, read through the frontmatte
 and filter out only the relevant files.
 """
 
+function filter_out_files(list)
+    extensions = [".pdf", ".png", ".jpg", ".heic"]
+    list = filter(x -> !any(ext -> endswith(x, ext), extensions), list)
+    return list
+end
+
 function get_markdown_files(folder::String)
     first_read = readdir(folder, join=true)
+    filter_regex = r".+\/\..+"
+    first_read = filter(x -> !endswith(x, filter_regex), first_read)
+    first_read = filter_out_files(first_read)
     _files = _recurrent_readdir.(first_read)
     files = _unpack_files(_files)
     md_files = filter(x -> endswith(x, ".md"), files)
@@ -14,8 +23,10 @@ end
 function _recurrent_readdir(x)
     if !isfile(x)
         y = readdir(x, join=true)
+        y = filter_out_files(y)
         map(a -> _recurrent_readdir(a), y)
     else
+    # elseif isfile(x) && endswith(x, ".md")
         return x
     end
 end
