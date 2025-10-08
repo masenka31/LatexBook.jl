@@ -2,3 +2,4 @@
 /data/metadata
 /data/samples
 .DS_store
+.env

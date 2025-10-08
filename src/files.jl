@@ -87,27 +87,37 @@ function write_chapters(book::BookData, nickname::String, scenes_df::DataFrame)
 
     """
 
-    project_path = joinpath(projects_path, "project_$nickname")
+    project_path = joinpath(book.path, "project_$nickname")
     chapter_files = String[]
+    full_content = String[]
 
     for (i, chapter) in enumerate(groupby(scenes_df, :chapter_number))
         scenes = chapter.scene_content
         if length(scenes) == 1
+            content = czech_speech("\\chapter{}\n\n" * scenes[1])
             write_chapter_file(
                 joinpath(project_path, "chapters", "chapter_$i"),
-                czech_speech("\\chapter{}\n\n" * scenes[1])
+                content,
             )
             push!(chapter_files, "chapters/chapter_$i")
         else
             a = chapter.scene_content[1:end-1] .* separator
             b = "\\chapter{}\n\n" * prod(a) * chapter.scene_content[end]
+            content = czech_speech(b)
             write_chapter_file(
                 joinpath(project_path, "chapters", "chapter_$i"),
-                czech_speech(b)
+                content,
             )
             push!(chapter_files, "chapters/chapter_$i")
         end
+        push!(full_content, content)
     end
+
+    # write full content
+     open(joinpath(project_path, "full_content.tex"), "w") do io
+        write(io, join(full_content, "\n"));
+    end;
+
     @info "Number of chapters: $(length(chapter_files))."
     append!(book.chapter_files, chapter_files)
     render_main(book, project_path)

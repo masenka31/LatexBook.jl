@@ -24,6 +24,7 @@ struct BookData
     publisher
     year
     isbn
+    path
     chapter_files
 end
 
@@ -35,10 +36,11 @@ function BookData(;
     subtitle::StringOrNothing=nothing,
     publisher::StringOrNothing=nothing,
     year::String=string(year(now())),
-    isbn::StringOrNothing=nothing
+    isbn::StringOrNothing=nothing,
+    path::String=projects_path,
 )
 
-    return BookData(author, title, subtitle, publisher, year, isbn, Vector{String}(undef, 0))
+    return BookData(author, title, subtitle, publisher, year, isbn, path, Vector{String}(undef, 0))
 end
 
 function BookData(
@@ -48,9 +50,10 @@ function BookData(
     subtitle::StringOrNothing=nothing,
     publisher::StringOrNothing=nothing,
     year::String=string(year(now())),
-    isbn::StringOrNothing=nothing)
+    isbn::StringOrNothing=nothing,
+    path::String=projects_path,)
 
-    return BookData(author, title, subtitle, publisher, year, isbn, chapters)
+    return BookData(author, title, subtitle, publisher, year, isbn, path, chapters)
 end
 
 function BookData(
@@ -60,10 +63,11 @@ function BookData(
     subtitle::StringOrNothing=nothing,
     publisher::StringOrNothing=nothing,
     year::String=string(year(now())),
-    isbn::StringOrNothing=nothing)
+    isbn::StringOrNothing=nothing,
+    path::String=projects_path,)
 
     chapters = readdir(chapter_path)
-    return BookData(author, title, subtitle, publisher, year, isbn, chapters)
+    return BookData(author, title, subtitle, publisher, year, isbn, path, chapters)
 end
 
 
@@ -74,7 +78,8 @@ function bookmetadata(book::BookData)
         book.subtitle,
         book.publisher,
         book.year,
-        book.isbn
+        book.isbn,
+        book.path,
     ]
 end
 
@@ -90,7 +95,8 @@ function metadata_commands(book::BookData)
         "\\newcommand{\\subtitle}{$(book.subtitle)}",
         "\\newcommand{\\publisher}{$(book.publisher)}",
         "\\newcommand{\\editionyear}{$(book.year)}",
-        "\\newcommand{\\isbn}{$(book.isbn)}"
+        "\\newcommand{\\isbn}{$(book.isbn)}",
+        "\\newcommand{\\path}{$(book.path)}",
     ]
     b = isnothing.(bookmetadata(book))
     commands[b] = "% " .* commands[b]

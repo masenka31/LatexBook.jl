@@ -1,22 +1,23 @@
-function prepare_metadata_and_save(;nickname, author, title, subtitle=nothing, publisher=nothing, isbn=nothing)
+function prepare_metadata_and_save(;nickname, author, title, subtitle=nothing, publisher=nothing, isbn=nothing, path)
     # creates and saves metadata for your book
     metadata = (
         author=author,
         title=title,
         subtitle=subtitle,
         publisher=publisher,
-        isbn=isbn
+        isbn=isbn,
+        path=path,
     )
     safesave(datadir("metadata/$(nickname).bson"), Dict(:metadata => metadata))
     @info "Metadata saved with nickname `$nickname`."
 
     # creates the latex directory in your book based on the initial data
-    cp(datadir("project_template"), joinpath(projects_path, "project_$nickname"))
-    @info "Project folder generated at `$(joinpath(projects_path, "project_$nickname"))`."
+    cp(datadir("project_template"), joinpath(path, "project_$nickname"))
+    @info "Project folder generated at `$(joinpath(path, "project_$nickname"))`."
 
     # generates the main.tex file based on the metadata provided
     book = BookData(;metadata...)
-    render_main(book, joinpath(projects_path, "project_$nickname"))
+    render_main(book, joinpath(path, "project_$nickname"))
     @info "File `main.tex` generated."
 end
 
@@ -30,10 +31,15 @@ function init_project_interactive()
     publisher = yes_or_no("Does the book have a publisher?", if_yes_question="What is the publisher of the book?")
     isbn = yes_or_no("Does the book have ISBN?", if_yes_question="What is the ISBN of the book?")
 
-    println("Give a nickname for your book - it is best to have a single word lwoercase nickname, because this will serve as a /key/ to all generation etc.")
+    println("Give a nickname for your book - it is best to have a single word lowercase nickname, because this will serve as a /key/ to all generation etc.")
     nickname = readline()
-
-    prepare_metadata_and_save(;nickname=nickname, author=author, title=title, subtitle=subtitle, publisher=publisher, isbn=isbn)
+    println("Specify a path where you want to save your project and files. If left empty, the default path `$(projects_path)` will be used.")
+    path = readline()
+    if isempty(path)
+        path = projects_path
+    end
+    
+    prepare_metadata_and_save(;nickname=nickname, author=author, title=title, subtitle=subtitle, publisher=publisher, isbn=isbn, path=path)
 end
 
 function init_project(;interactive=true, kwargs...)

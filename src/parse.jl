@@ -31,24 +31,37 @@ function parse_file(lines)
         if occursin("book", line)
             book = match(r"book: (.+)", line).captures[1]
             push!(dict, :book => String(book))
+        
         elseif occursin("scene_number", line)
-            scene_number = match(r"scene_number: (.+)", line).captures[1]
-            if scene_number == "undefined"
+            matched = match(r"scene_number: (.+)", line)
+            if isnothing(matched)
                 push!(dict, :scene_number => 999)
             else
-                scene_number = strip(scene_number, '\"')
-                push!(dict, :scene_number => parse(Int, scene_number))
+                scene_number = matched.captures[1]
+                if scene_number == "undefined"
+                    push!(dict, :scene_number => 999)
+                else
+                    scene_number = strip(scene_number, '\"')
+                    push!(dict, :scene_number => parse(Int, scene_number))
+                end
             end
+        
         elseif occursin("chapter_name", line)
             chapter_name = match(r"chapter_name: (.+)", line).captures[1]
             push!(dict, :chapter_name => String(chapter_name))
+        
         elseif occursin("chapter_number", line)
-            chapter_number = match(r"chapter_number: (.+)", line).captures[1]
-            if chapter_number == "undefined"
+            matched = match(r"chapter_number: (.+)", line)
+            if isnothing(matched)
                 push!(dict, :chapter_number => 999)
-            else    
-                chapter_number = strip(chapter_number, '\"')
-                push!(dict, :chapter_number => parse(Int, chapter_number))
+            else
+                chapter_number = matched.captures[1]
+                if chapter_number == "undefined"
+                    push!(dict, :chapter_number => 999)
+                else    
+                    chapter_number = strip(chapter_number, '\"')
+                    push!(dict, :chapter_number => parse(Int, chapter_number))
+                end
             end
         end
     end

@@ -1,5 +1,6 @@
 using Pkg
-Pkg.activate(pwd())
+# Pkg.activate(pwd())
+Pkg.activate("/Users/masenka31/Documents/julia_projects/LatexBook.jl/")
 
 if length(ARGS) == 0
     @error "Nickname of the project needs to be provided."
